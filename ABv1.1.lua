@@ -10,30 +10,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-9
 spawn(function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/cpuReducer.lua"))()
 end)
-workspace.Map.DescendantAdded:Connect(function()
-    for i, v in pairs(workspace.Map:GetChildren()) do
-        if v:FindFirstChild("PARTS") then
-            v:FindFirstChild("PARTS"):Destroy()
-        end
-        wait()
-        if v:FindFirstChild("PARTS_LOD") then
-            a = v.PARTS_LOD:FindFirstChild("WALLS")
-            if a then
-                a:Destroy()
-            end
-        end
-        wait()
-        if v:FindFirstChild("INTERACT") then
-            if v.INTERACT:FindFirstChild("Upgrades") then
-            v.INTERACT:FindFirstChild("Upgrades"):Destroy()
-            end
-            if v.INTERACT:FindFirstChild("ZoneQuest") then
-            v.INTERACT:FindFirstChild("ZoneQuest"):Destroy()
-            end
-        end
-        wait()
-    end
-end)
+
 loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/antiStaff.lua"))()
 
 local Library = require(game:GetService("ReplicatedStorage").Library)
