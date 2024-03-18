@@ -7,7 +7,9 @@ if getgenv().autoBalloonConfig.Username == "" then
 end
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/waitForGameLoad.lua"))()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/cpuReducer.lua"))()
+spawn(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/cpuReducer.lua"))()
+end)
 workspace.Map.DescendantAdded:Connect(function()
     for i, v in pairs(workspace.Map:GetChildren()) do
         if v:FindFirstChild("PARTS") then
