@@ -25,17 +25,58 @@ game:GetService("Workspace").__THINGS:FindFirstChild("Orbs").ChildAdded:Connect(
     end
 end)
 
-print("boga boga")
 task.wait(getgenv().autoBalloonConfig.START_DELAY)
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local LocalPlayer = game:GetService("Players").LocalPlayer
-
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
--- Ensure 'Highlight' exists before attempting to destroy it
+local Library = require(game:GetService("ReplicatedStorage").Library)
+local saveMod = require(game:GetService("ReplicatedStorage").Library.Client.Save)
+function Info(name) return saveMod.Get()[name] end 
+function getDiamonds() return game:GetService("Players").LocalPlayer.leaderstats["💎 Diamonds"].Value end
+
+spawn(function()
+    while getgenv().Config.AutoMailbox do
+        if getDiamonds() >= 10000 then
+            for ID, v in pairs(Info("Inventory").Misc) do
+                if v.id == "Large Gift Bag" and getgenv().Config.LargeGiftBag then
+                    if v._am >= getgenv().Config.GiftBagAmount then
+                        _G.SendingMail = true
+                        local success = Library.Network.Invoke("Mailbox: Send", getgenv().Config.Username, "from Auto-Balloon Farm", "Misc", ID, v._am)
+                        repeat wait() until success
+                        print("Sent Mailbox of", v._am, v.id, "to", getgenv().Config.Username)
+                        task.wait(1)
+                        _G.SendingMail = false
+                    end
+                end
+                if v.id == "Gift Bag" and getgenv().Config.SmallGiftBag then
+                    if v._am >= getgenv().Config.GiftBagAmount then
+                        _G.SendingMail = true
+                        local success = Library.Network.Invoke("Mailbox: Send", getgenv().Config.Username, "from Auto-Balloon Farm", "Misc", ID, v._am)
+                        repeat wait() until success
+                        print("Sent Mailbox of", v._am, v.id, "to", getgenv().Config.Username)
+                        task.wait(1)
+                        _G.SendingMail = false
+                    end
+                end
+                if v.id == "Mini Chest" and getgenv().Config.MiniChest then
+                    if v._am >= getgenv().Config.MiniChestAmount then
+                        _G.SendingMail = true
+                        local success = Library.Network.Invoke("Mailbox: Send", getgenv().Config.Username, "from Auto-Balloon Farm", "Misc", ID, v._am)
+                        repeat wait() until success
+                        print("Sent Mailbox of", v._am, v.id, "to", getgenv().Config.Username)
+                        task.wait(1)
+                        _G.SendingMail = false
+                    end
+                end
+            end
+        end
+        task.wait(1)
+    end
+end)
+
 local highlight = Workspace.__THINGS.Breakables:FindFirstChild("Highlight")
 if highlight then
     highlight:Destroy()
@@ -87,7 +128,7 @@ while getgenv().autoBalloon do
 
     if allPopped then
         print("No balloons detected, waiting " .. getgenv().autoBalloonConfig.GET_BALLOON_DELAY .. " seconds")
-        if getgenv().autoBalloonConfig.SERVER_HOP then
+        if getgenv().autoBalloonConfig.SERVER_HOP and not _G.SendingMail then
             loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/serverhop.lua"))()
         end
         task.wait(getgenv().autoBalloonConfig.GET_BALLOON_DELAY)
@@ -142,7 +183,7 @@ while getgenv().autoBalloon do
         task.wait(getgenv().autoBalloonConfig.BALLOON_DELAY)
     end
 
-    if getgenv().autoBalloonConfig.SERVER_HOP then
+    if getgenv().autoBalloonConfig.SERVER_HOP and not _G.SendingMail then
         loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/serverhop.lua"))()
     end
 
