@@ -49,7 +49,7 @@ function getDiamonds() return game:GetService("Players").LocalPlayer.leaderstats
 spawn(function()
     game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Giftbags Frontend"].Disabled = true
 
-    while getgenv().Config.AutoOpen do
+    while getgenv().autoBalloonConfig.AutoOpen do
         for i = 1, 10 do
         game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("GiftBag_Open"):InvokeServer("Large Gift Bag")
         game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("GiftBag_Open"):InvokeServer("Gift Bag")
@@ -59,16 +59,16 @@ spawn(function()
 end)
 
 spawn(function()
-    if getgenv().Config.AutoOpen then
-        while getgenv().Config.AutoOpen and wait(1) do
+    if getgenv().autoBalloonConfig.AutoOpen then
+        while getgenv().autoBalloonConfig.AutoOpen and wait(1) do
             if getDiamonds() >= 10000 then
                 for ID, v in pairs(Info("Inventory").Currency) do
-                    if v.id == "Diamonds" and getgenv().Config.AutoSendGems then
-                        if v._am >= getgenv().Config.MinimumGems then
+                    if v.id == "Diamonds" and getgenv().autoBalloonConfig.AutoSendGems then
+                        if v._am >= getgenv().autoBalloonConfig.MinimumGems then
                             _G.SendingMail = true
-                            local success = Library.Network.Invoke("Mailbox: Send", getgenv().Config.Username, "from Auto-Balloon Farm", "Currency", ID, v._am - 50000)
+                            local success = Library.Network.Invoke("Mailbox: Send", getgenv().autoBalloonConfig.Username, "from Auto-Balloon Farm", "Currency", ID, v._am - 50000)
                             repeat wait() until success
-                            print("Sent Mailbox of", v._am, v.id, "to", getgenv().Config.Username)
+                            print("Sent Mailbox of", v._am, v.id, "to", getgenv().autoBalloonConfig.Username)
                             task.wait(1)
                             _G.SendingMail = false
                         end
@@ -81,25 +81,25 @@ spawn(function()
 end)
 
 spawn(function()
-    while getgenv().Config.AutoMailboxBags do
+    while getgenv().autoBalloonConfig.AutoMailboxBags do
         if getDiamonds() >= 10000 then
             for ID, v in pairs(Info("Inventory").Misc) do
-                if v.id == "Large Gift Bag" and getgenv().Config.LargeGiftBag then
-                    if v._am >= getgenv().Config.GiftBagAmount then
+                if v.id == "Large Gift Bag" and getgenv().autoBalloonConfig.LargeGiftBag then
+                    if v._am >= getgenv().autoBalloonConfig.GiftBagAmount then
                         _G.SendingMail = true
-                        local success = Library.Network.Invoke("Mailbox: Send", getgenv().Config.Username, "from Auto-Balloon Farm", "Misc", ID, v._am)
+                        local success = Library.Network.Invoke("Mailbox: Send", getgenv().autoBalloonConfig.Username, "from Auto-Balloon Farm", "Misc", ID, v._am)
                         repeat wait() until success
-                        print("Sent Mailbox of", v._am, v.id, "to", getgenv().Config.Username)
+                        print("Sent Mailbox of", v._am, v.id, "to", getgenv().autoBalloonConfig.Username)
                         task.wait(1)
                         _G.SendingMail = false
                     end
                 end
-                if v.id == "Gift Bag" and getgenv().Config.SmallGiftBag then
-                    if v._am >= getgenv().Config.GiftBagAmount then
+                if v.id == "Gift Bag" and getgenv().autoBalloonConfig.SmallGiftBag then
+                    if v._am >= getgenv().autoBalloonConfig.GiftBagAmount then
                         _G.SendingMail = true
-                        local success = Library.Network.Invoke("Mailbox: Send", getgenv().Config.Username, "from Auto-Balloon Farm", "Misc", ID, v._am)
+                        local success = Library.Network.Invoke("Mailbox: Send", getgenv().autoBalloonConfig.Username, "from Auto-Balloon Farm", "Misc", ID, v._am)
                         repeat wait() until success
-                        print("Sent Mailbox of", v._am, v.id, "to", getgenv().Config.Username)
+                        print("Sent Mailbox of", v._am, v.id, "to", getgenv().autoBalloonConfig.Username)
                         task.wait(1)
                         _G.SendingMail = false
                     end
