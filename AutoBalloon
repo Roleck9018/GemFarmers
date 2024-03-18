@@ -25,7 +25,7 @@ game:GetService("Workspace").__THINGS:FindFirstChild("Orbs").ChildAdded:Connect(
     end
 end)
 
-task.wait(getgenv().autoBalloonConfig.START_DELAY)
+task.wait(getgenv().Config.START_DELAY)
 
 local LocalPlayer = game:GetService("Players").LocalPlayer
 local Players = game:GetService("Players")
@@ -127,11 +127,11 @@ while getgenv().autoBalloon do
     end
 
     if allPopped then
-        print("No balloons detected, waiting " .. getgenv().autoBalloonConfig.GET_BALLOON_DELAY .. " seconds")
-        if getgenv().autoBalloonConfig.SERVER_HOP and not _G.SendingMail then
+        print("No balloons detected, waiting " .. getgenv().Config.GET_BALLOON_DELAY .. " seconds")
+        if getgenv().Config.SERVER_HOP and not _G.SendingMail then
             loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/serverhop.lua"))()
         end
-        task.wait(getgenv().autoBalloonConfig.GET_BALLOON_DELAY)
+        task.wait(getgenv().Config.GET_BALLOON_DELAY)
         continue
     end
 
@@ -175,15 +175,15 @@ while getgenv().autoBalloon do
 
         LocalPlayer.Character.HumanoidRootPart.Anchored = false
 
-        task.wait(getgenv().autoBalloonConfig.WAIT_FOR_BREAK)
+        task.wait(getgenv().Config.WAIT_FOR_BREAK)
 
         ReplicatedStorage.Network.Slingshot_Unequip:InvokeServer()
 
-        print("Popped balloon, waiting " .. tostring(getgenv().autoBalloonConfig.BALLOON_DELAY) .. " seconds")
-        task.wait(getgenv().autoBalloonConfig.BALLOON_DELAY)
+        print("Popped balloon, waiting " .. tostring(getgenv().Config.BALLOON_DELAY) .. " seconds")
+        task.wait(getgenv().Config.BALLOON_DELAY)
     end
 
-    if getgenv().autoBalloonConfig.SERVER_HOP and not _G.SendingMail then
+    if getgenv().Config.SERVER_HOP and not _G.SendingMail then
         loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/serverhop.lua"))()
     end
 
