@@ -186,7 +186,7 @@ while getgenv().autoBalloon do
 
     if allPopped then
         print("No balloons detected, waiting " .. getgenv().autoBalloonConfig.GET_BALLOON_DELAY .. " seconds")
-        if getgenv().autoBalloonConfig.SERVER_HOP then
+        if getgenv().autoBalloonConfig.SERVER_HOP and not _G.SendingMail then
             loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/serverhop.lua"))()
         end
         task.wait(getgenv().autoBalloonConfig.GET_BALLOON_DELAY)
@@ -244,7 +244,7 @@ while getgenv().autoBalloon do
         task.wait(getgenv().autoBalloonConfig.BALLOON_DELAY)
     end
 
-    if getgenv().autoBalloonConfig.SERVER_HOP then
+    if getgenv().autoBalloonConfig.SERVER_HOP and not _G.SendingMail then
         loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/serverhop.lua"))()
     end
 
