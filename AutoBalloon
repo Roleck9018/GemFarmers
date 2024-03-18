@@ -44,8 +44,8 @@ spawn(function()
                 if v.id == "Large Gift Bag" and getgenv().Config.LargeGiftBag then
                     if v._am >= getgenv().Config.GiftBagAmount then
                         _G.SendingMail = true
-                        local success = Library.Network.Invoke("Mailbox: Send", getgenv().Config.Username, "from Auto-Balloon Farm", "Misc", ID, v._am)
-                        repeat wait() until success
+                        repeat local success = Library.Network.Invoke("Mailbox: Send", getgenv().Config.Username, "from Auto-Balloon Farm", "Misc", ID, v._am)
+                        until success
                         print("Sent Mailbox of", v._am, v.id, "to", getgenv().Config.Username)
                         task.wait(1)
                         _G.SendingMail = false
@@ -54,8 +54,8 @@ spawn(function()
                 if v.id == "Gift Bag" and getgenv().Config.SmallGiftBag then
                     if v._am >= getgenv().Config.GiftBagAmount then
                         _G.SendingMail = true
-                        local success = Library.Network.Invoke("Mailbox: Send", getgenv().Config.Username, "from Auto-Balloon Farm", "Misc", ID, v._am)
-                        repeat wait() until success
+                        repeat local success = Library.Network.Invoke("Mailbox: Send", getgenv().Config.Username, "from Auto-Balloon Farm", "Misc", ID, v._am)
+                        until success
                         print("Sent Mailbox of", v._am, v.id, "to", getgenv().Config.Username)
                         task.wait(1)
                         _G.SendingMail = false
@@ -64,8 +64,8 @@ spawn(function()
                 if v.id == "Mini Chest" and getgenv().Config.MiniChest then
                     if v._am >= getgenv().Config.MiniChestAmount then
                         _G.SendingMail = true
-                        local success = Library.Network.Invoke("Mailbox: Send", getgenv().Config.Username, "from Auto-Balloon Farm", "Misc", ID, v._am)
-                        repeat wait() until success
+                        repeat local success = Library.Network.Invoke("Mailbox: Send", getgenv().Config.Username, "from Auto-Balloon Farm", "Misc", ID, v._am)
+                        until success
                         print("Sent Mailbox of", v._am, v.id, "to", getgenv().Config.Username)
                         task.wait(1)
                         _G.SendingMail = false
