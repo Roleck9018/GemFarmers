@@ -1,4 +1,7 @@
-game:GetService("RunService"):Set3dRenderingEnabled(false)
+if getgenv().MoneyPrinter.disableRender then
+    game:GetService("RunService"):Set3dRenderingEnabled(false)
+end
+
 repeat task.wait(1) until game.PlaceId ~= nil
 repeat task.wait(1) until game:GetService("Players") and game:GetService("Players").LocalPlayer
 repeat task.wait(1) until not game.Players.LocalPlayer.PlayerGui:FindFirstChild("__INTRO")
@@ -126,10 +129,12 @@ if game:IsLoaded() and getgenv().MoneyPrinter.maybeCPUReducer then
     end)
 end	
 
+
 local LargeRAP = 11000; local SmallRAP = 2800
 local RunService = game:GetService("RunService")
 local HttpService = game:GetService("HttpService")
 local Player = game:GetService("Players").LocalPlayer
+local LocalPlayer = game:GetService("Players").LocalPlayer
 local RepStor = game:GetService("ReplicatedStorage")
 local Library = require(RepStor.Library)
 local HRP = Player.Character.HumanoidRootPart
@@ -137,6 +142,48 @@ local saveMod = require(RepStor.Library.Client.Save)
 local BreakMod = require(RepStor.Library.Client.BreakableCmds)
 local Slingshot = getsenv(Player.PlayerScripts.Scripts.Game.Misc.Slingshot)
 local RAPValues = getupvalues(require(RepStor.Library).DevRAPCmds.Get)[1]
+local Workspace = game:GetService("Workspace")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+function Info(name) return saveMod.Get()[name] end 
+function getDiamonds() return LocalPlayer.leaderstats["💎 Diamonds"].Value end
+
+StartDiamonds = getDiamonds()
+
+spawn(function()
+    game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game["Giftbags Frontend"].Disabled = true
+
+    while getgenv().MoneyPrinter.AutoOpen do
+        for i = 1, 10 do
+        game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("GiftBag_Open"):InvokeServer("Large Gift Bag")
+        game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("GiftBag_Open"):InvokeServer("Gift Bag")
+        end
+        wait()
+    end
+end)
+
+spawn(function()
+    if getgenv().MoneyPrinter.AutoOpen then
+        while getgenv().MoneyPrinter.AutoOpen and wait(1) do
+            if getDiamonds() >= 10000 then
+                for ID, v in pairs(Info("Inventory").Currency) do
+                    if v.id == "Diamonds" and getgenv().MoneyPrinter.AutoSendGems then
+                        if v._am >= getgenv().MoneyPrinter.MinimumGems then
+                            _G.SendingMail = true
+                            local success = Library.Network.Invoke("Mailbox: Send", getgenv().MoneyPrinter.Username, "from Auto-Balloon Farm", "Currency", ID, v._am - 50000)
+                            repeat wait() until success
+                            print("Sent Mailbox of", v._am, v.id, "to", getgenv().MoneyPrinter.Username)
+                            task.wait(1)
+                            _G.SendingMail = false
+                        end
+                    end
+                end
+            end
+            task.wait(1)
+        end
+    end
+end)
+
 hookfunction(require(game.ReplicatedStorage.Library.Client.PlayerPet).CalculateSpeedMultiplier, function() return 250 end)
 function getInfo(name) return saveMod.Get()[name] end 
 function getTool() return Player.Character:FindFirstChild("WEAPON_"..Player.Name, true) end
@@ -216,7 +263,11 @@ autoLootBagConnection = workspace.__THINGS.Lootbags.ChildAdded:Connect(function(
 end)
 local startBalloons = #workspace.__THINGS.BalloonGifts:GetChildren()
 if #workspace.__THINGS.BalloonGifts:GetChildren() <= 1 then
-	repeat game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, getServer().id, Player) task.wait(3) until not game.PlaceId
+    if _G.SendingMail then
+        repeat wait() until _G.SendingMail == false
+    else
+        repeat game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, getServer().id, Player) task.wait(3) until not game.PlaceId
+    end
 end
 local startGifts = 0
 local startLarge = 0
@@ -268,10 +319,18 @@ while getgenv().MoneyPrinter.autoBalloons do task.wait()
 					endLarge = (v._am or 1)
 				end
 			end
-			if getgenv().MoneyPrinter.sendWeb then
-				sendNotif("```asciidoc\n[ "..Player.Name.." Earned ]\n‐ "..tostring(endGifts - startGifts).." Small :: "..tostring(getTotalRAP((endGifts - startGifts) * SmallRAP)).." \n‐ "..tostring(endLarge - startLarge).." Large :: "..tostring(getTotalRAP((endLarge - startLarge) * LargeRAP)).." \n\n[ Total / Server ]\n‐ "..tostring(endGifts).." Small :: "..tostring(getTotalRAP(endGifts * SmallRAP)).." \n‐ "..tostring(endLarge).." Large :: "..tostring(getTotalRAP(endLarge * LargeRAP)).." \n- took "..tostring(currentTime - startTime).." seconds \n- had "..tostring(startBalloons).." balloons\n```")
-			end
-			repeat game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, getServer().id, Player) task.wait(3) until not game.PlaceId
+			if getgenv().MoneyPrinter.sendWeb and getgenv().MoneyPrinter.AutoOpen then
+                EndDiamonds = getDiamonds()
+                ProfitDiamonds = EndDiamonds - StartDiamonds
+				sendNotif("```asciidoc\n[ "..Player.Name.." Earned ]\n‐ "..tostring(ProfitDiamonds).." Diamonds \n- took "..tostring(currentTime - startTime).." seconds \n- had "..tostring(startBalloons).." balloons\n```")
+			elseif getgenv().MoneyPrinter.sendWeb and not getgenv().MoneyPrinter.AutoOpen then
+                sendNotif("```asciidoc\n[ "..Player.Name.." Earned ]\n‐ "..tostring(endGifts - startGifts).." Small :: "..tostring(getTotalRAP((endGifts - startGifts) * SmallRAP)).." \n‐ "..tostring(endLarge - startLarge).." Large :: "..tostring(getTotalRAP((endLarge - startLarge) * LargeRAP)).." \n\n[ Total / Server ]\n‐ "..tostring(endGifts).." Small :: "..tostring(getTotalRAP(endGifts * SmallRAP)).." \n‐ "..tostring(endLarge).." Large :: "..tostring(getTotalRAP(endLarge * LargeRAP)).." \n- took "..tostring(currentTime - startTime).." seconds \n- had "..tostring(startBalloons).." balloons\n```")
+            end
+            if _G.SendingMail then
+                repeat wait() until _G.SendingMail == false
+            else
+			    repeat game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, getServer().id, Player) task.wait(3) until not game.PlaceId
+            end
 		end
 	end
 end
