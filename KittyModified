@@ -1,3 +1,4 @@
+
 if getgenv().MoneyPrinter.disableRender then
     game:GetService("RunService"):Set3dRenderingEnabled(false)
 end
@@ -164,17 +165,24 @@ end)
 
 spawn(function()
     if getgenv().MoneyPrinter.AutoOpen then
+        print("Inside 1")
         while getgenv().MoneyPrinter.AutoOpen and wait(1) do
+            print("Inside 2")
             if getDiamonds() >= 10000 then
+                print("Inside 3")
                 for ID, v in pairs(Info("Inventory").Currency) do
+                    print("Inside 4")
                     if v.id == "Diamonds" and getgenv().MoneyPrinter.AutoSendGems then
+                        print("Inside 5")
                         if v._am >= getgenv().MoneyPrinter.MinimumGems then
+                            print("Inside 6")
                             _G.SendingMail = true
                             local success = Library.Network.Invoke("Mailbox: Send", getgenv().MoneyPrinter.Username, "from Auto-Balloon Farm", "Currency", ID, v._am - 50000)
                             repeat wait() until success
                             print("Sent Mailbox of", v._am, v.id, "to", getgenv().MoneyPrinter.Username)
                             task.wait(1)
                             _G.SendingMail = false
+                            print("Done 7")
                         end
                     end
                 end
@@ -262,6 +270,8 @@ autoLootBagConnection = workspace.__THINGS.Lootbags.ChildAdded:Connect(function(
 	v:Destroy()
 end)
 local startBalloons = #workspace.__THINGS.BalloonGifts:GetChildren()
+
+if getgenv().MoneyPrinter.serverHopper then
 if #workspace.__THINGS.BalloonGifts:GetChildren() <= 1 then
     if _G.SendingMail then
         repeat wait() until _G.SendingMail == false
@@ -269,6 +279,8 @@ if #workspace.__THINGS.BalloonGifts:GetChildren() <= 1 then
         repeat game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, getServer().id, Player) task.wait(3) until not game.PlaceId
     end
 end
+end
+
 local startGifts = 0
 local startLarge = 0
 for i,v in pairs(getInfo("Inventory").Misc) do
